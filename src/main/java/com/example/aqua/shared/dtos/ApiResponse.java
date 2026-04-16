@@ -1,17 +1,18 @@
 package com.example.aqua.shared.dtos;
+import java.util.Map;
 
 public class ApiResponse {
-    private int status;
+    private boolean status;
     private String message;
     private Object data;
 
-    public ApiResponse(int status, String message, Object data) {
-        this.status = status;
-        this.message = message;
-        this.data = data;
+    public ApiResponse(Map<String, Object> data) {
+        this.status = (boolean) data.get("status");
+        this.message = (String) data.get("message");
+        this.data = data.get("data") != null ? data.get("data") : null;
     }
 
-    public int getStatus() { return status; }
+    public boolean getStatus() { return status; }
     public String getMessage() { return message; }
     public Object getData() { return data; }
 }

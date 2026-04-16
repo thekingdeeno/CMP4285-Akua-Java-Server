@@ -27,6 +27,7 @@ public class UserService {
 
         Map<String, Object> data = new HashMap<>();
         data.put("status", true);
+        data.put("message", "User created successfully");
         data.put("data", query);
         return data;
     }
@@ -37,6 +38,7 @@ public class UserService {
         if (user != null) {
             data.put("status", true);
             data.put("data", user);
+            data.put("message", "User retrieved successfully");
         } else {
             data.put("status", false);
             data.put("message", "User not found");

@@ -34,5 +34,4 @@ public class HardwareService {
         response.put("data", savedHardware);
         return response;
     }
-
 }
