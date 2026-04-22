@@ -1,5 +1,9 @@
 package com.example.aqua.models;
 import jakarta.persistence.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -14,6 +18,7 @@ public class User {
     private String name;
     @JsonIgnore
     private String password;
+    @Column(unique = true, nullable = false)
     private String email;
 
     public User() {
@@ -27,4 +32,13 @@ public class User {
     public String getName() { return name; }
     public String getPassword() { return password; }
     public String getEmail() { return email; }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("user_id", user_id);
+        map.put("name", name);
+        map.put("email", email);
+        return map;
+    }
 }

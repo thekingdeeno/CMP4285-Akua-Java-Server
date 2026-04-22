@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.aqua.modules.user.dtos.CreateUserReq;
 import java.util.Map;
-import java.util.HashMap;
 import com.example.aqua.models.User;
+import com.example.aqua.shared.utils.Response;
 
 @Service
 public class UserService {
@@ -16,33 +16,51 @@ public class UserService {
     }
 
     public Map<String, Object> createUser(CreateUserReq body){
-        System.out.println("Creating user: " + body.getName());
-        User user = new User();
-        user.setName(body.getName());
-        user.setPassword(body.getPassword());
-        user.setEmail(body.getEmail());
-        User query = userRepository.save(user);
+        try {
+            System.out.println("Creating user: " + body.getName());
+            User user = new User();
+            user.setName(body.getName());
+            user.setPassword(body.getPassword());
+            user.setEmail(body.getEmail());
+            User query = userRepository.save(user);
 
-        System.out.println("User created with ID: " + user.getId());
+            System.out.println("User created with ID: " + user.getId());
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("status", true);
-        data.put("message", "User created successfully");
-        data.put("data", query);
-        return data;
+            return Response.format(true, "User created successfully", query.toMap());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.format(false, "User creation failed: " + e.getMessage(), null);
+        }
+    }
+
+    public Map<String, Object> login(CreateUserReq body) {
+        try {
+            User user = userRepository.findByEmail(body.getEmail());
+            System.out.println("Attempting login for email: " + body.getEmail() + body.getPassword());
+
+            if(user == null) {
+                return Response.format(false, "Login failed: User not found", null);
+            }
+            if (user.getPassword() == null || !user.getPassword().equals(body.getPassword())) {
+                return Response.format(false, "Login failed: Incorrect password", null);
+            }
+            System.out.println("Login successful for user: " + user.getEmail());
+            return Response.format(true, "Login successful", user.toMap());
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.format(false, "Login failed: " + e.getMessage(), null);
+        }
     }
 
     public Map<String, Object> getUserById(Long id) {
-        User user = userRepository.findById(id).orElse(null);
-        Map<String, Object> data = new HashMap<>();
-        if (user != null) {
-            data.put("status", true);
-            data.put("data", user);
-            data.put("message", "User retrieved successfully");
-        } else {
-            data.put("status", false);
-            data.put("message", "User not found");
+        try {
+            User user = userRepository.findById(id).orElse(null);
+            Map<String, Object> userMap = user.toMap();
+            return Response.format(true, "User retrieved successfully", userMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.format(false, "Failed to retrieve user: " + e.getMessage(), null);
         }
-        return data;
     }
 }
