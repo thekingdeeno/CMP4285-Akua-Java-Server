@@ -53,16 +53,38 @@ public class HardwareService {
     }
 
 
+    public Map<String, Object> setReadings(String hardwareId, JsonNode readings) {
+        try {
+            Hardware hardware = hardwareRepository.findByHardwareId(hardwareId);
+            if (hardware == null) {
+                return Response.format(false, "Hardware not found", null);
+            }
+
+            // todo... write a middleware function to validate the req.body later
+            ObjectMapper mapper = new ObjectMapper();
+            String readingsStr = mapper.writeValueAsString(readings);
+            hardware.setReadings(readingsStr);
+
+            return Response.format(true, "Reading updated successfully", null);
+        } catch (Exception e) {
+            return Response.format(false, "Failed to retrieve hardware: " + e.getMessage(), null);
+        }
+    }
+
+
     public Map<String, Object> getReadings(String hardwareId) {
         try {
-            String hw_readings = hardwareRepository.getHardwareReadings(hardwareId);
+            // String hw_readings = hardwareRepository.getHardwareReadings(hardwareId);
+
+            String hw_readings = "{\"temp\": 25.5, \"ph\": 7.2, \"turb\": 5, \"tds\": 300}"; // Simulated readings
+            
 
             ObjectMapper mapper = new ObjectMapper();
-            JsonNode paarsedReadings = mapper.readTree(hw_readings);
+            JsonNode parsedReadings = mapper.readTree(hw_readings);
 
-            Map<String, Object> readings = mapper.convertValue(paarsedReadings, new TypeReference<Map<String, Object>>(){});
+            Map<String, Object> readings = mapper.convertValue(parsedReadings, new TypeReference<Map<String, Object>>(){});
 
-            return Response.format(true, hardwareId, readings);
+            return Response.format(true, "Readings retrieved successfully", readings);
         } catch (Exception e) {
             return Response.format(false, "Failed to retrieve hardware: " + e.getMessage(), null);
         }
