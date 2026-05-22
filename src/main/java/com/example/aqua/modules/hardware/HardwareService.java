@@ -23,7 +23,7 @@ public class HardwareService {
 
         Hardware hardware = new Hardware();
         hardware.setHardwareId(body.getHardwareId());
-        hardware.setHardwareKey(body.getHardwareKey());
+        // hardware.setHardwareKey(body.getHardwareKey());
         hardware.setUserId(body.getUserId());
         hardware.setConfig("{}"); 
         hardware.setReadings("{}");
@@ -74,9 +74,9 @@ public class HardwareService {
 
     public Map<String, Object> getReadings(String hardwareId) {
         try {
-            // String hw_readings = hardwareRepository.getHardwareReadings(hardwareId);
+            String hw_readings = hardwareRepository.getHardwareReadings(hardwareId);
 
-            String hw_readings = "{\"temp\": 25.5, \"ph\": 7.2, \"turb\": 5, \"tds\": 300}"; // Simulated readings
+            // String hw_readings = "{\"temp\": 25.5, \"ph\": 7.2, \"turb\": 5, \"tds\": 300}"; // Simulated readings
             
 
             ObjectMapper mapper = new ObjectMapper();

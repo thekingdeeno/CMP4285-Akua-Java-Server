@@ -9,6 +9,7 @@ public class Hardware {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     private String hw_id;
     private String hw_key;
     private String user_id;
